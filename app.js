@@ -4,11 +4,10 @@ const bodyParser = require("body-parser");
 
 const app = express();
 const port = 3000;
+const host = '0.0.0.0';  // Permitir accesos externos
 
-// Middleware para procesar JSON
 app.use(bodyParser.json());
 
-// Conectar a SQLite (crea un archivo database.db si no existe)
 const db = new sqlite3.Database("./database.db", (err) => {
   if (err) {
     console.error("Error al conectar a la base de datos", err.message);
@@ -17,6 +16,10 @@ const db = new sqlite3.Database("./database.db", (err) => {
   }
 });
 
+// Iniciar servidor en todas las interfaces de red
+app.listen(port, host, () => {
+  console.log(`Servidor corriendo en http://${host}:${port}`);
+});
 // Crear la tabla si no existe
 db.run(
   `CREATE TABLE IF NOT EXISTS users (
